@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELS Reading</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #10233f;
+      --muted: #5f718c;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --grammar: #059669;
+      --grammar-soft: #d1fae5;
+      --border: #d8e1ec;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .hidden { display: none !important; }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+      padding: 28px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    .title { font-size: 36px; margin-bottom: 8px; }
+    .subtitle { color: var(--muted); }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 16px;
+      outline: none;
+      margin-top: 16px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-vocab {
+      background: var(--primary-soft);
+      color: #1947a8;
+    }
+
+    .btn-grammar {
+      background: var(--grammar-soft);
+      color: #047857;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .unit-card {
+      padding: 20px;
+    }
+
+    .unit-meta {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .section {
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .passage {
+      line-height: 1.9;
+      font-size: 17px;
+    }
+
+    .vocab-highlight {
+      background: rgba(37, 99, 235, 0.18);
+      color: #133b8f;
+      padding: 2px 4px;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+
+    .grammar-highlight {
+      background: rgba(5, 150, 105, 0.18);
+      color: #065f46;
+      padding: 2px 4px;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+
+    .question-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      margin-top: 8px;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .option-correct {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    .option-wrong {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #991b1b;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .item-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .label-blue { color: #1d4ed8; }
+    .label-green { color: #047857; }
+    .small { color: var(--muted); font-size: 14px; }
+
+    .sentence-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .two-col, .sentence-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section id="loginView" class="login-wrap">
+    <div class="card login-card">
+      <h1 class="title">ELS</h1>
+      <p class="subtitle">English through reading</p>
+      <input id="studentName" type="text" placeholder="Write your name" />
+      <button id="loginBtn" class="btn-primary" style="width:100%; margin-top: 14px;">Enter</button>
+    </div>
+  </section>
+
+  <section id="dashboardView" class="hidden">
+    <div class="container">
+      <div class="header">
+        <div>
+          <h1 style="margin-bottom:8px;">ELS Menu</h1>
+          <p class="subtitle" id="welcomeText"></p>
+        </div>
+        <button class="btn-secondary" id="logoutBtn">Log out</button>
+      </div>
+      <div id="unitsContainer" class="menu-grid"></div>
+    </div>
+  </section>
+
+  <section id="unitView" class="hidden">
+    <div class="container">
+      <div class="header">
+        <div>
+          <h1 id="unitTitle"></h1>
+          <p class="subtitle" id="unitLevel"></p>
+        </div>
+        <button class="btn-secondary" id="backBtn">Back to menu</button>
+      </div>
+
+      <div class="card section">
+        <div class="toolbar">
+          <button class="btn-vocab" id="toggleVocabBtn">Show vocabulary in text</button>
+          <button class="btn-grammar" id="toggleGrammarBtn">Show grammar in text</button>
+        </div>
+        <h2>Passage</h2>
+        <div id="passageBox" class="passage"></div>
+      </div>
+
+      <div class="card section">
+        <h2>Multiple-choice questions</h2>
+        <div id="questionsBox"></div>
+      </div>
+
+      <div class="two-col">
+        <div class="card section">
+          <h2 class="label-blue">Good vocabulary</h2>
+          <div id="vocabBox"></div>
+        </div>
+
+        <div class="card section">
+          <h2 class="label-green">Good grammar</h2>
+          <div id="grammarBox"></div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <h2>Sentence-part helper</h2>
+        <div id="sentencePartsBox"></div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/units.js"></script>
+  <script>
+    const state = {
+      studentName: localStorage.getItem("elsStudentName") || "",
+      currentUnitId: null,
+      showVocab: false,
+      showGrammar: false,
+      answers: {}
+    };
+
+    const loginView = document.getElementById("loginView");
+    const dashboardView = document.getElementById("dashboardView");
+    const unitView = document.getElementById("unitView");
+    const studentNameInput = document.getElementById("studentName");
+    const welcomeText = document.getElementById("welcomeText");
+    const unitsContainer = document.getElementById("unitsContainer");
+    const unitTitle = document.getElementById("unitTitle");
+    const unitLevel = document.getElementById("unitLevel");
+    const passageBox = document.getElementById("passageBox");
+    const questionsBox = document.getElementById("questionsBox");
+    const vocabBox = document.getElementById("vocabBox");
+    const grammarBox = document.getElementById("grammarBox");
+    const sentencePartsBox = document.getElementById("sentencePartsBox");
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function showView(view) {
+      loginView.classList.add("hidden");
+      dashboardView.classList.add("hidden");
+      unitView.classList.add("hidden");
+      view.classList.remove("hidden");
+    }
+
+    function renderDashboard() {
+      welcomeText.textContent = `Welcome, ${state.studentName}. Choose a unit.`;
+      unitsContainer.innerHTML = "";
+
+      UNITS.forEach(unit => {
+        const card = document.createElement("div");
+        card.className = "card unit-card";
+        card.innerHTML = `
+          <h2>Unit ${unit.id}</h2>
+          <p><strong>${unit.title}</strong></p>
+          <p class="unit-meta">${unit.level}</p>
+          <button class="btn-primary" style="margin-top:14px;">Open unit</button>
+        `;
+        card.querySelector("button").onclick = () => openUnit(unit.id);
+        unitsContainer.appendChild(card);
+      });
+    }
+
+    function renderPassage(unit) {
+      let html = unit.passage;
+
+      if (state.showVocab) {
+        unit.vocabulary.forEach(item => {
+          const regex = new RegExp("\\b" + escapeRegExp(item.word) + "\\b", "gi");
+          html = html.replace(regex, match => `<span class="vocab-highlight">${match}</span>`);
+        });
+      }
+
+      if (state.showGrammar && unit.grammarTargets) {
+        unit.grammarTargets
+          .sort((a, b) => b.length - a.length)
+          .forEach(target => {
+            const regex = new RegExp(escapeRegExp(target), "g");
+            html = html.replace(regex, `<span class="grammar-highlight">${target}</span>`);
+          });
+      }
+
+      passageBox.innerHTML = html;
+    }
+
+    function renderQuestions(unit) {
+      questionsBox.innerHTML = "";
+      unit.questions.forEach((q, qIndex) => {
+        const box = document.createElement("div");
+        box.className = "question-box";
+        box.innerHTML = `<p><strong>${qIndex + 1}.</strong> ${q.question}</p>`;
+
+        q.options.forEach((option, oIndex) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.textContent = option;
+
+          const key = `${unit.id}-${qIndex}`;
+          const chosen = state.answers[key];
+
+          if (chosen !== undefined) {
+            if (oIndex === q.answer) btn.classList.add("option-correct");
+            else if (oIndex === chosen) btn.classList.add("option-wrong");
+          }
+
+          btn.onclick = () => {
+            state.answers[key] = oIndex;
+            renderQuestions(unit);
+          };
+
+          box.appendChild(btn);
+        });
+
+        questionsBox.appendChild(box);
+      });
+    }
+
+    function renderVocab(unit) {
+      vocabBox.innerHTML = unit.vocabulary.map(item => `
+        <div class="item-box">
+          <h3>${item.word}</h3>
+          <p>${item.meaning}</p>
+          <p class="small"><strong>Example:</strong> ${item.example}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderGrammar(unit) {
+      grammarBox.innerHTML = unit.grammar.map(item => `
+        <div class="item-box">
+          <h3>${item.point}</h3>
+          <p>${item.explanation}</p>
+          <p class="small"><strong>Example:</strong> ${item.example}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderSentenceParts(unit) {
+      sentencePartsBox.innerHTML = unit.sentenceParts.map(item => `
+        <div class="item-box">
+          <p><strong>Sentence:</strong> ${item.sentence}</p>
+          <div class="sentence-grid">
+            <p><strong>Subject:</strong> ${item.subject}</p>
+            <p><strong>Verb:</strong> ${item.verb}</p>
+            <p><strong>Object / complement:</strong> ${item.object}</p>
+            <p><strong>Connector:</strong> ${item.connector}</p>
+            <p><strong>Extra part:</strong> ${item.extra}</p>
+          </div>
+          <p class="small" style="margin-top:10px;"><strong>Translation tip:</strong> ${item.tip}</p>
+        </div>
+      `).join("");
+    }
+
+    function openUnit(id) {
+      const unit = UNITS.find(u => u.id === id);
+      if (!unit) return;
+      state.currentUnitId = id;
+      state.showVocab = false;
+      state.showGrammar = false;
+      unitTitle.textContent = `Unit ${unit.id}: ${unit.title}`;
+      unitLevel.textContent = unit.level;
+      renderPassage(unit);
+      renderQuestions(unit);
+      renderVocab(unit);
+      renderGrammar(unit);
+      renderSentenceParts(unit);
+      showView(unitView);
+    }
+
+    document.getElementById("loginBtn").onclick = () => {
+      const name = studentNameInput.value.trim();
+      if (!name) {
+        alert("Please write your name first.");
+        return;
+      }
+      state.studentName = name;
+      localStorage.setItem("elsStudentName", name);
+      renderDashboard();
+      showView(dashboardView);
+    };
+
+    document.getElementById("logoutBtn").onclick = () => {
+      localStorage.removeItem("elsStudentName");
+      state.studentName = "";
+      showView(loginView);
+    };
+
+    document.getElementById("backBtn").onclick = () => {
+      renderDashboard();
+      showView(dashboardView);
+    };
+
+    document.getElementById("toggleVocabBtn").onclick = () => {
+      const unit = UNITS.find(u => u.id === state.currentUnitId);
+      state.showVocab = !state.showVocab;
+      renderPassage(unit);
+    };
+
+    document.getElementById("toggleGrammarBtn").onclick = () => {
+      const unit = UNITS.find(u => u.id === state.currentUnitId);
+      state.showGrammar = !state.showGrammar;
+      renderPassage(unit);
+    };
+
+    if (state.studentName) {
+      renderDashboard();
+      showView(dashboardView);
+    } else {
+      showView(loginView);
+    }
+  </script>
+</body>
+</html>
